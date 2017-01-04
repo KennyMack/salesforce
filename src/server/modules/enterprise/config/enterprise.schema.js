@@ -16,6 +16,37 @@ const date = core.date;
  * @type {Schema}
  */
 const enterpriseSchema = new db.mongoose.Schema({
+  company_name: {
+    type: String,
+    required: true
+  },
+  trading_name: {
+    type: String,
+    required: true
+  },
+  active: {
+    type: Number,
+    required: true,
+    default: 1
+  },
+  lastbuy: {
+    type: Date,
+    required: true
+  },
+  registry: {
+    type: String,
+    required: true,
+    unique: true,
+    index: true
+  },
+  /**
+   * 0 - Client 1 - Supplier 2 - Shipping Company 3 - Representative 4 - Salesman 5 - Prospect
+   */
+  type: {
+    type: Number,
+    required: true,
+    index: true,
+  },
   create_at: {
     type: Date,
     required: true,
@@ -25,10 +56,6 @@ const enterpriseSchema = new db.mongoose.Schema({
     type: Date,
     required: true,
     default: date.getDateTimeNow()
-  },
-  title: {
-    type: String,
-    required: true
   },
   checksum: {
     type: String,
