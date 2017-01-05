@@ -28,14 +28,25 @@ function isNumber(pnum) {
   return (!isNaN(parseFloat(pnum)) && isFinite(pnum));
 };
 
-function formatDate(date) {
+/**
+ * Format date String, in case no format suplied
+ * will return in format defined in .env file
+ * @param  {String} date   date valueOf
+ * @param  {String} format Optional Date Format
+ * @return {Date}        Date Formated
+ */
+function formatDate(date, format) {
+  if (!format)
+    format = config.getDateTimeFormat();
+
   if (isNumber(date))
     date = new Date(date);
-  return moment(date, 'DD/MM/YYYY').format(config.getDateTimeFormat());
+
+  return moment(date, 'DD/MM/YYYY').format(format);
 }
 
 function getDateUTC() {
-  return moment.utc().valueOf()
+  return moment.utc().valueOf();
 }
 
 /**
@@ -46,8 +57,3 @@ module.exports = {
   getDateNow: getDateNow,
   getDateTimeNow: getDateTimeNow
 };
-let date = getDateUTC();
-console.log(formatDate(date));
-
-console.log(getDateNow());
-console.log(getDateTimeNow());

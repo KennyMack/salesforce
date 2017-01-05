@@ -55,6 +55,10 @@ function getSecret() {
   return process.env.SECRET || '123456';
 }
 
+function getLocale() {
+  return process.env.LOCALE || 'pt-BR';
+}
+
 /**
  * load env vars
  * @return {Promise} Resolve/Reject
@@ -92,5 +96,6 @@ module.exports = {
   getDbUrl: getDbUrl,
   getDateFormat: getDateFormat,
   getDateTimeFormat: getDateTimeFormat,
-  getSecret: getSecret
+  getSecret: getSecret,
+  getLocale: getLocale
 };
