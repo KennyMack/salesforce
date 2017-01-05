@@ -1,6 +1,6 @@
 'use strict';
 /**
- * Module core
+ * Module crypto
  */
 
 /**

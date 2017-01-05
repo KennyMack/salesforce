@@ -24,6 +24,19 @@ function getDateTimeNow() {
 function getDateNow() {
   return moment().format(config.getDateFormat());
 }
+function isNumber(pnum) {
+  return (!isNaN(parseFloat(pnum)) && isFinite(pnum));
+};
+
+function formatDate(date) {
+  if (isNumber(date))
+    date = new Date(date);
+  return moment(date, 'DD/MM/YYYY').format(config.getDateTimeFormat());
+}
+
+function getDateUTC() {
+  return moment.utc().valueOf()
+}
 
 /**
  * Module Export
@@ -33,3 +46,8 @@ module.exports = {
   getDateNow: getDateNow,
   getDateTimeNow: getDateTimeNow
 };
+let date = getDateUTC();
+console.log(formatDate(date));
+
+console.log(getDateNow());
+console.log(getDateTimeNow());

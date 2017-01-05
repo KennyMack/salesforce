@@ -7,5 +7,7 @@
 module.exports = {
   date: require('./date'),
   config: require('./config'),
-  connection: require('./connection')
+  connection: require('./connection'),
+  crypto: require('./crypto'),
+  certificates: require('./certificates')
 };
