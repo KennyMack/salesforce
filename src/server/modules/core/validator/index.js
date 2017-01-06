@@ -8,6 +8,7 @@
  */
 const Joi = require('joi');
 const validator = require('validator');
+const messages = require('./language');
 
 
 const optionsJoi = {
@@ -18,8 +19,8 @@ const optionsJoi = {
   noDefaults: false
 };
 
-const model = {
-  string: stringField
+const models = {
+  stringField: stringField
 };
 
 /**
@@ -32,7 +33,7 @@ function validateSchema(obj, schema) {
   return new Promise(function (resolve, reject) {
     Joi.validate(obj, schema, optionsJoi, function (err, value) {
       if (err) {
-        console.log(err);
+        console.log(err.details[0].context);
         let lstErrors = [];
         let regField = new RegExp('((?!\").*(?=\"))');
         let regMsg = new RegExp('((\").*(\"))');
@@ -41,7 +42,7 @@ function validateSchema(obj, schema) {
           let field = err.details[i].message.match(regField)[0];
           lstErrors.push({
             field: field,
-            message: capfirst(validator.trim(err.details[i].message.replace(regMsg, '')))
+            message: capfirst(validator.trim(messages.getLocaleErrorMessage(err.details[i]))) //err.details[i].message.replace(regMsg, '')))
           });
         }
         reject({ value: value, err: lstErrors });
@@ -62,38 +63,18 @@ function capfirst(value) {
 }
 
 
-function stringField(required, message) {
+function stringField(required) {
   let joi = Joi.string();
   if (required)
     joi = joi.required();
 
-  if (message) {
-    joi = joi.options({
-      language: {
-        any: {
-          empty: message
-        }
-      }
-    });
-  }
-
   return joi;
 }
 
-function nestedArray(required, schema, message) {
+function nestedArray(required, schema) {
   let joi = Joi.array().items(schema);
   if (required)
-    joi = joi.required();
-
-  if (message) {
-    joi = joi.options({
-      language: {
-        any: {
-          required: message
-        }
-      }
-    });
-  }
+    joi = joi.required().min(1);
 
   return joi;
 }
@@ -101,21 +82,24 @@ function nestedArray(required, schema, message) {
 
 
 const addressSchema = Joi.object({
-  location: stringField(true, 'informe o endereço') //Joi.string().required().options({ language: { any: { empty: 'informe o endereço' } } })
-})
+  location: /*models.stringField(true, 'informe o endereço')*/ Joi.string().required().options({ language: { any: { empty: 'informe o endereço' } } })
+});
 
 const person = Joi.object({
-  name: stringField(true, 'informe o nome'), //Joi.string().required().options({ language: { any: { empty: 'informe o nome' } } }),
-  address: nestedArray(true, addressSchema, 'informe ao menos 1 endereço')
+  name: stringField(true), //Joi.string().required().options({ language: { any: { empty: 'informe o nome' } } }),
+  address: nestedArray(true, addressSchema),
+  pos: Joi.array().min(1).options({ language: { any: { min: 'Deve ser informado 1' } } })
   //Joi.array().items(addressSchema).required().options({ language: { any: { required: 'informe ao menos 1 endereço' } } })
 });
 
 
 var p = {
-  'name': 'a',
-  'address': [/*{
+  'name': '',
+  /*'address': [{
     'location': ''
-  }*/]
+  }]*/
+  address: [],
+  pos: []
 };
 
 validateSchema(p, person)
