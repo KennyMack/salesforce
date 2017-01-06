@@ -1,76 +1,127 @@
 'use strict';
-const schema = require('validate');
+/**
+ * Module validator
+ */
+
+/**
+ * Dependencies
+ */
+const Joi = require('joi');
+const validator = require('validator');
 
 
-const optionsSchema = {
-  typecast: true
+const optionsJoi = {
+  abortEarly: false,
+  convert: true,
+  allowUnknown: false,
+  stripUnknown: true,
+  noDefaults: false
 };
 
+const model = {
+  string: stringField
+};
+
+/**
+ * Validate object with Schema
+ * @param  {Object} obj    Object to validate
+ * @param  {Object} schema Schema definition
+ * @return {Promise}        Resolve/Reject
+ */
 function validateSchema(obj, schema) {
   return new Promise(function (resolve, reject) {
-    let errors = schema.validate(obj, optionsSchema);
-    if (errors.length) {
-      let lstErrors = [];
-      for (var i = 0, l = errors.length; i < l; i++) {
-        lstErrors.push({
-          field: errors[i].path,
-          message: errors[i].message
-        });
+    Joi.validate(obj, schema, optionsJoi, function (err, value) {
+      if (err) {
+        console.log(err);
+        let lstErrors = [];
+        let regField = new RegExp('((?!\").*(?=\"))');
+        let regMsg = new RegExp('((\").*(\"))');
+
+        for (var i = 0, l = err.details.length; i < l; i++) {
+          let field = err.details[i].message.match(regField)[0];
+          lstErrors.push({
+            field: field,
+            message: capfirst(validator.trim(err.details[i].message.replace(regMsg, '')))
+          });
+        }
+        reject({ value: value, err: lstErrors });
       }
-      reject({ err: obj });
-    }
-
-
+      else
+        resolve({ value: value });
+    })
   });
 }
 
 /**
- * Module Export
- * @type {Object}
+ * Upper Case first character
+ * @param  {String} value String
+ * @return {String}       String
  */
-var obj = {
-  validator: require('validator'),
-  schema: schema
+function capfirst(value) {
+    return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
+
+function stringField(required, message) {
+  let joi = Joi.string();
+  if (required)
+    joi = joi.required();
+
+  if (message) {
+    joi = joi.options({
+      language: {
+        any: {
+          empty: message
+        }
+      }
+    });
+  }
+
+  return joi;
+}
+
+function nestedArray(required, schema, message) {
+  let joi = Joi.array().items(schema);
+  if (required)
+    joi = joi.required();
+
+  if (message) {
+    joi = joi.options({
+      language: {
+        any: {
+          required: message
+        }
+      }
+    });
+  }
+
+  return joi;
+}
+
+
+
+const addressSchema = Joi.object({
+  location: stringField(true, 'informe o endereço') //Joi.string().required().options({ language: { any: { empty: 'informe o endereço' } } })
+})
+
+const person = Joi.object({
+  name: stringField(true, 'informe o nome'), //Joi.string().required().options({ language: { any: { empty: 'informe o nome' } } }),
+  address: nestedArray(true, addressSchema, 'informe ao menos 1 endereço')
+  //Joi.array().items(addressSchema).required().options({ language: { any: { required: 'informe ao menos 1 endereço' } } })
+});
+
+
+var p = {
+  'name': 'a',
+  'address': [/*{
+    'location': ''
+  }*/]
 };
 
-
-let user = obj.schema();
-
-user
-  .path('username')
-  .type('string')
-  .required()
-  .match(/[a-z]{2,16}/)
-  .message('Username must be 2-16 chars.');
-user.path('password')
-  .type('string')
-  .required()
-  .message('senha deve ser informada');
-user.path('index')
-  .type('number')
-  .required()
-  .message('deve ser um numero');
-user.path('any')
-  .type('string')
-  .use(function(value) {
-    return valida(value); // Using the validator module
-  }, 'Somente arrays')
-  .required();
-
-function valida(value) {
-  console.log(value);
-  return Array.isArray(value);
-}
-
-var sc = {
-  'username':'aa',
-  'password':'asda',
-  'hello': 'asas',
-  'index': '1',
-  'any': []
-}
-console.log(sc);
-var errors = user.validate(sc, optionsSchema);
-console.log(sc);
-
-console.log(errors);
+validateSchema(p, person)
+  .then(function (result) {
+    console.log(result);
+  })
+  .catch(function (err) {
+    console.log(err);
+  })

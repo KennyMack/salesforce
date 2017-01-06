@@ -24,6 +24,7 @@ function getDateTimeNow() {
 function getDateNow() {
   return moment().format(config.getDateFormat());
 }
+
 function isNumber(pnum) {
   return (!isNaN(parseFloat(pnum)) && isFinite(pnum));
 };
@@ -45,6 +46,10 @@ function formatDate(date, format) {
   return moment(date, 'DD/MM/YYYY').format(format);
 }
 
+/**
+ * return actual Date Time in utc
+ * @return {DateTime} actual Date Time
+ */
 function getDateUTC() {
   return moment.utc().valueOf();
 }
@@ -55,5 +60,7 @@ function getDateUTC() {
  */
 module.exports = {
   getDateNow: getDateNow,
-  getDateTimeNow: getDateTimeNow
+  getDateTimeNow: getDateTimeNow,
+  getDateUTC: getDateUTC,
+  formatDate: formatDate
 };
