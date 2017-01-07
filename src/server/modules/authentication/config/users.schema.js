@@ -15,7 +15,7 @@ const db = core.connection;
  * Article Schema Definition
  * @type {Schema}
  */
-const articleSchema = new db.mongoose.Schema({
+const usersSchema = new db.mongoose.Schema({
   username: {
     type: String,
     unique: true,
@@ -61,4 +61,4 @@ const articleSchema = new db.mongoose.Schema({
  * Module Export
  * @type {Object}
  */
-module.exports.articleSchema = articleSchema;
+module.exports.usersSchema = usersSchema;

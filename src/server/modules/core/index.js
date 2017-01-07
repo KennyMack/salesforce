@@ -9,5 +9,6 @@ module.exports = {
   config: require('./config'),
   connection: require('./connection'),
   crypto: require('./crypto'),
-  certificates: require('./certificates')
+  certificates: require('./certificates'),
+  validator: require('./validator')
 };
