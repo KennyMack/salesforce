@@ -124,5 +124,6 @@ module.exports = {
   models: models,
   capfirst: capfirst,
   validateSchema: validateSchema,
-  validator: validator
+  validator: validator,
+  schema: Joi.object
 };
