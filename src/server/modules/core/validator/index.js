@@ -9,7 +9,6 @@
 const Joi = require('joi');
 const validator = require('validator');
 const messages = require('./language');
-const utils = require('../utils');
 
 const optionsJoi = {
   abortEarly: false,
@@ -19,12 +18,14 @@ const optionsJoi = {
   noDefaults: false
 };
 
-const models = {
-  stringField: stringField,
-  booleanField: booleanField,
-  dateField: dateField,
-  nestedArray: nestedArray
-};
+/**
+ * Upper Case first character
+ * @param  {String} value String
+ * @return {String}       String
+ */
+function capfirst(value) {
+  return value.charAt(0).toUpperCase() + value.slice(1);
+}
 
 /**
  * Validate object with Schema
@@ -38,7 +39,6 @@ function validateSchema(obj, schema) {
       if (err) {
         let lstErrors = [];
         let regField = new RegExp('((?!\").*(?=\"))');
-        let regMsg = new RegExp('((\").*(\"))');
 
         for (let i = 0, l = err.details.length; i < l; i++) {
           let field = err.details[i].message.match(regField)[0];
@@ -51,17 +51,9 @@ function validateSchema(obj, schema) {
       }
       else
         resolve({ value: value });
-    })
+      console.log('validate');
+    });
   });
-}
-
-/**
- * Upper Case first character
- * @param  {String} value String
- * @return {String}       String
- */
-function capfirst(value) {
-    return value.charAt(0).toUpperCase() + value.slice(1);
 }
 
 /**
@@ -115,6 +107,13 @@ function nestedArray(required, schema) {
 
   return joi;
 }
+
+const models = {
+  stringField: stringField,
+  booleanField: booleanField,
+  dateField: dateField,
+  nestedArray: nestedArray
+};
 
 /**
  * Module Export

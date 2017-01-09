@@ -8,7 +8,9 @@
  * Dependencies
  */
 const mongoose   = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate');
 const config     = require('../config');
+const handlers   = require('./handlers');
 
 /**
  * Mongoose Config
@@ -50,8 +52,10 @@ function getObjectId(id) {
  */
 module.exports = {
   mongoose: mongoose,
+  mongoosePaginate: mongoosePaginate,
   types: mongoose.Schema.Types,
   open: open,
   database: mongoose.connection,
-  getObjectId: getObjectId
+  getObjectId: getObjectId,
+  handlers: handlers
 };

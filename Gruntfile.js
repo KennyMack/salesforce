@@ -78,18 +78,18 @@ module.exports = function(grunt) {
       all: {
         src: [
           'Gruntfile.js',
-          '<%= appcfg.src %>/server/{,*/}*.js',
-          '<%= appcfg.src %>/client/{,*/}*.js'
+          '<%= appcfg.src %>/server/{,*/}{,*/}{,*/}{,*/}*.js',
+          '<%= appcfg.src %>/client/{,*/}{,*/}{,*/}{,*/}*.js'
         ]
       },
       api: {
         src: [
-          '<%= appcfg.src %>/server/{,*/}*.js'
+          '<%= appcfg.src %>/server/{,*/}{,*/}{,*/}{,*/}*.js'
         ]
       },
       client: {
         src: [
-          '<%= appcfg.src %>/client/{,*/}*.js'
+          '<%= appcfg.src %>/client/{,*/}{,*/}{,*/}{,*/}*.js'
         ]
       },
     },
@@ -101,18 +101,18 @@ module.exports = function(grunt) {
       all: {
         src: [
           'Gruntfile.js',
-          '<%= appcfg.src %>/server/{,*/}*.js',
-          '<%= appcfg.src %>/client/{,*/}*.js'
+          '<%= appcfg.src %>/server/{,*/}{,*/}{,*/}{,*/}*.js',
+          '<%= appcfg.src %>/client/{,*/}{,*/}{,*/}{,*/}*.js'
         ]
       },
       api: {
         src: [
-          '<%= appcfg.src %>/server/{,*/}*.js'
+          '<%= appcfg.src %>/server/{,*/}{,*/}{,*/}{,*/}*.js'
         ]
       },
       client: {
         src: [
-          '<%= appcfg.src %>/client/{,*/}*.js'
+          '<%= appcfg.src %>/client/{,*/}{,*/}{,*/}{,*/}*.js'
         ]
       },
     }

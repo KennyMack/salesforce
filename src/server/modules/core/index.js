@@ -10,5 +10,7 @@ module.exports = {
   connection: require('./connection'),
   crypto: require('./crypto'),
   certificates: require('./certificates'),
-  validator: require('./validator')
+  validator: require('./validator'),
+  http: require('./http'),
+  utils: require('./utils')
 };

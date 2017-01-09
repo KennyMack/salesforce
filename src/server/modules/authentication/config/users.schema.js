@@ -59,6 +59,8 @@ const usersSchema = new db.mongoose.Schema({
   }
 });
 
+usersSchema.plugin(db.mongoosePaginate);
+
 /**
  * Users Schema create validation
  * @type {Object}
@@ -72,10 +74,23 @@ const usersCreateSchema = schema({
 });
 
 /**
+ * Users Schema update validation
+ * @type {Object}
+ */
+const usersUpdateSchema = schema({
+  username: models.stringField(true),
+  email: models.stringField(true).email(),
+  password: models.stringField(true),
+  last_login: models.dateField(true),
+  checksum: models.stringField(true)
+});
+
+/**
  * Module Export
  * @type {Object}
  */
 module.exports = {
   usersSchema: usersSchema,
-  usersCreateSchema: usersCreateSchema
+  usersCreateSchema: usersCreateSchema,
+  usersUpdateSchema: usersUpdateSchema
 };

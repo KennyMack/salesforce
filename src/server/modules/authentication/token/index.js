@@ -18,16 +18,15 @@ function getReqToken(req) {
 
 
 function validateToken(token, pcert) {
-    return new Promise(function (resolve, reject) {
-        jwt.verify(token, pcert, { algorithms: ['RS256'] }, function(err, decoded) {
-            if (err) {
-                reject({
-                    'err': 'Erro ao validar token.',
-                    'status': 401
-                });
-            }
-            else
-                resolve(decoded);
+  return new Promise(function (resolve, reject) {
+    jwt.verify(token, pcert, { algorithms: ['RS256'] }, function(err, decoded) {
+      if (err)
+        reject({
+          'err': 'Erro ao validar token.',
+          'status': 401
         });
+      else
+        resolve(decoded);
     });
-};
+  });
+}

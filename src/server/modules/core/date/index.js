@@ -27,7 +27,7 @@ function getDateNow() {
 
 function isNumber(pnum) {
   return (!isNaN(parseFloat(pnum)) && isFinite(pnum));
-};
+}
 
 /**
  * Format date String, in case no format suplied

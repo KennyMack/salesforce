@@ -16,9 +16,8 @@ const fs = require('fs');
 function getPort() {
   let port = process.env.PORT || 3000;
 
-  if (isNaN(port)) {
+  if (isNaN(port))
     return 3000;
-  }
 
   return port;
 }
@@ -55,8 +54,28 @@ function getSecret() {
   return process.env.SECRET || '123456';
 }
 
+/**
+ * return locale
+ * @return {String} locale
+ */
 function getLocale() {
   return process.env.LOCALE || 'pt-BR';
+}
+
+/**
+ * max size of page
+ * @return {Number} max page
+ */
+function getPageMaxSize() {
+  return process.env.PAGE_MAX_SIZE || 100;
+}
+
+/**
+ * default page size
+ * @return {Number} default page size
+ */
+function getPageSize() {
+  return process.env.PAGE_SIZE || 10;
 }
 
 /**
@@ -69,9 +88,8 @@ function loadEnv() {
     let local = path.dirname(module.parent.filename);
     local = path.resolve(path.join(local, '../../../'));
     fs.readFile(local + '/.env', 'utf-8', function(err, data) {
-      if (err) {
+      if (err)
         reject(err);
-      }
       else {
         let rows = data.split(/\r?\n/);
 
@@ -97,5 +115,7 @@ module.exports = {
   getDateFormat: getDateFormat,
   getDateTimeFormat: getDateTimeFormat,
   getSecret: getSecret,
-  getLocale: getLocale
+  getLocale: getLocale,
+  getPageMaxSize: getPageMaxSize,
+  getPageSize: getPageSize
 };

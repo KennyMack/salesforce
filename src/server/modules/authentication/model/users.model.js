@@ -10,8 +10,8 @@
 const core = require('../../core');
 const usersSchema = require('../config/users.schema');
 const db = core.connection;
-const config = core.config;
 const date = core.date;
+const config = core.config;
 const crypto = core.crypto;
 const validator = core.validator;
 const checkField = core.validator.validator;
@@ -48,7 +48,7 @@ usersSchema.usersSchema.pre('save', function (next) {
  * Exec before update
  */
 usersSchema.usersSchema.pre('update', function (next) {
-  preUpdate(this._update['$set'], next);
+  preUpdate(this._update.$set, next);
 });
 
 /**
@@ -57,8 +57,6 @@ usersSchema.usersSchema.pre('update', function (next) {
  * @return {Promise}        Resolve/Reject
  */
 function insert(user) {
-  console.log('user');
-  console.log(user);
   return new usersModel(user)
     .save();
 }
@@ -71,15 +69,17 @@ function insert(user) {
  */
 function update(id, user) {
   let query = {
-    _id: db.getObjectId(id)
+    _id: id
   };
+
   let opt = {
     upsert: false,
     new: true
-  }
+  };
+
   return usersModel
     .findOneAndUpdate(query, user, opt)
-    .exec()
+    .exec();
 }
 
 /**
@@ -96,9 +96,19 @@ function remove(id) {
  * List all register in DB
  * @return {Promise} Resolve/Reject
  */
-function list() {
-  return usersModel.find()
-    .exec();
+function list(page) {
+  let pageSize = parseInt(config.getPageSize());
+  return usersModel.paginate(
+    {
+      active: true
+    },
+    {
+      page: page,
+      limit: pageSize,
+      sort: {
+        'create_at': 'descending'
+      }
+    });
 }
 
 /**
@@ -118,13 +128,39 @@ function findById(id) {
  */
 function validateCreate(user) {
 
-  user['username'] = checkField.trim(checkField.escape(user['username']));
-  user['email'] = checkField.trim(checkField.escape(user['email']));
-  user['password'] = checkField.trim(checkField.escape(user['password']));
-  user['last_login'] = checkField.trim(checkField.escape(user['last_login']));
-  user['checksum'] = checkField.trim(checkField.escape(user['checksum']));
+  user.username = checkField.trim(checkField.escape(user.username));
+  user.email = checkField.trim(checkField.escape(user.email));
+  user.password = checkField.trim(checkField.escape(user.password));
+  user.last_login = checkField.trim(checkField.escape(user.last_login));
+  user.checksum = checkField.trim(checkField.escape(user.checksum));
 
   return validator.validateSchema(user, usersSchema.usersCreateSchema);
+}
+
+/**
+ * Validate create
+ * @param  {Object} user user object
+ * @return {Promise}      Resolve/Reject
+ */
+function validateUpdate(user) {
+
+  user.username = checkField.trim(checkField.escape(user.username));
+  user.email = checkField.trim(checkField.escape(user.email));
+  user.password = checkField.trim(checkField.escape(user.password));
+  user.last_login = checkField.trim(checkField.escape(user.last_login));
+  user.checksum = checkField.trim(checkField.escape(user.checksum));
+
+  return validator.validateSchema(user, usersSchema.usersUpdateSchema);
+}
+
+function validateId(id) {
+  return new Promise(function (resolve, reject) {
+    id = checkField.trim(id);
+    if (checkField.isMongoId(id))
+      resolve(db.getObjectId(id));
+    else
+      reject(id);
+  });
 }
 
 /**
@@ -133,6 +169,8 @@ function validateCreate(user) {
  */
 module.exports = {
   validateCreate: validateCreate,
+  validateUpdate: validateUpdate,
+  validateId: validateId,
   insert: insert,
   update: update,
   remove: remove,

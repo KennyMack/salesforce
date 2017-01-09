@@ -20,6 +20,8 @@ const enterpriseModel = db.database.model('enterprise', enterpriseSchema);
  */
 function preUpdate(model, next) {
   model.modified_at = config.getDateTimeNow();
+
+  next();
 }
 
 /**
@@ -33,7 +35,7 @@ enterpriseSchema.pre('save', function (next) {
  * Exec before update
  */
 enterpriseSchema.pre('update', function (next) {
-  preUpdate(this._update['$set'], next);
+  preUpdate(this._update.$set, next);
 });
 
 /**
@@ -59,10 +61,11 @@ function update(id, enterprise) {
   let opt = {
     upsert: false,
     new: true
-  }
+  };
+
   return enterpriseModel
     .findOneAndUpdate(query, enterprise, opt)
-    .exec()
+    .exec();
 }
 
 /**

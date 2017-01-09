@@ -7,6 +7,6 @@
 /**
  * Dependencies
  */
-const core = require('../../core');
-const db = core.connection;
-const date = core.date;
+//const core = require('../../core');
+//const db = core.connection;
+//const date = core.date;
