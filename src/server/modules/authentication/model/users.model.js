@@ -24,7 +24,13 @@ const usersModel = db.database.model('users', usersSchema.usersSchema);
  */
 function preUpdate(model, next) {
   model.modified_at = date.getDateTimeNow();
+
+  // TODO: Create a valid checksum for object
+  console.log('model a');
+  console.log(model);
   model.checksum = 'ooooo';
+  console.log('model n');
+  console.log(model);
   crypto.encrypt(model.password)
     .then(function (hash) {
       model.password = hash;
@@ -131,8 +137,7 @@ function validateCreate(user) {
   user.username = checkField.trim(checkField.escape(user.username));
   user.email = checkField.trim(checkField.escape(user.email));
   user.password = checkField.trim(checkField.escape(user.password));
-  user.last_login = checkField.trim(checkField.escape(user.last_login));
-  user.checksum = checkField.trim(checkField.escape(user.checksum));
+  user.passwordbis = checkField.trim(checkField.escape(user.passwordbis));
 
   return validator.validateSchema(user, usersSchema.usersCreateSchema);
 }

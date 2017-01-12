@@ -53,9 +53,15 @@ const usersSchema = new db.mongoose.Schema({
     required: true,
     default: true
   },
+  is_staff: {
+    type: Boolean,
+    required: true,
+    default: false
+  },
   checksum: {
     type: String,
-    required: true
+    required: true,
+    default: '-'
   }
 });
 
@@ -66,11 +72,10 @@ usersSchema.plugin(db.mongoosePaginate);
  * @type {Object}
  */
 const usersCreateSchema = schema({
-  username: models.stringField(true),
+  username: models.stringField(true).min(5).max(30),
   email: models.stringField(true).email(),
-  password: models.stringField(true),
-  last_login: models.dateField(true),
-  checksum: models.stringField(true)
+  password: models.stringField(true).min(8),
+  passwordbis: models.stringField(true).min(8)
 });
 
 /**
@@ -78,11 +83,8 @@ const usersCreateSchema = schema({
  * @type {Object}
  */
 const usersUpdateSchema = schema({
-  username: models.stringField(true),
-  email: models.stringField(true).email(),
-  password: models.stringField(true),
-  last_login: models.dateField(true),
-  checksum: models.stringField(true)
+  _id: models.stringField(true),
+  password: models.stringField(true)
 });
 
 /**

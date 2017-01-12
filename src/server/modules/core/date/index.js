@@ -9,6 +9,46 @@
 const moment = require('moment');
 const config = require('../config');
 
+const MONTHS = {
+  JANUARY: function() {
+    return 0;
+  }(),
+  FEBRUARY: function() {
+    return 1;
+  }(),
+  MARCH: function() {
+    return 2;
+  }(),
+  APRIL: function() {
+    return 3;
+  }(),
+  MAY: function() {
+    return 4;
+  }(),
+  JUNE: function() {
+    return 5;
+  }(),
+  JULY: function() {
+    return 6;
+  }(),
+  AUGUST: function() {
+    return 7;
+  }(),
+  SEPTEMBER: function() {
+    return 8;
+  }(),
+  OCTOBER: function() {
+    return 9;
+  }(),
+  NOVEMBER: function() {
+    return 10;
+  }(),
+  DECEMBER: function() {
+    return 11;
+  }()
+};
+
+
 /**
  * return actual Date Time
  * @return {DateTime} actual Date Time
@@ -62,5 +102,6 @@ module.exports = {
   getDateNow: getDateNow,
   getDateTimeNow: getDateTimeNow,
   getDateUTC: getDateUTC,
-  formatDate: formatDate
+  formatDate: formatDate,
+  MONTHS: MONTHS
 };

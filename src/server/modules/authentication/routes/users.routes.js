@@ -8,6 +8,7 @@
  */
 const core = require('../../core');
 const usersModel = require('../model/users.model');
+const usersCtrl = require('../controller/users.controller');
 const http = core.http;
 const utils = core.utils;
 const renderError = core.connection.handlers.renderHttpError;
@@ -18,13 +19,13 @@ const renderError = core.connection.handlers.renderHttpError;
  * @param  {Object}   res  response object
  */
 function get(req, res) {
-  let pageNum = utils.normalizeNumber(req.query.page || 0, 1);
+  let pageNum = utils.normalizeNumber(req.query.page || 1, 1);
   usersModel.list(pageNum)
     .then(function (result) {
       http.render(res, result);
     })
     .catch(function (err) {
-      renderError(res, err);
+      renderError(res, {}, err);
     });
 }
 
@@ -42,7 +43,7 @@ function getById(req, res) {
       http.render(res, result);
     })
     .catch(function (err) {
-      renderError(res, err);
+      renderError(res, {}, err);
     });
 }
 
@@ -57,19 +58,21 @@ function post(req, res) {
     username: req.body.username || '',
     email: req.body.email || '',
     password: req.body.password || '',
-    last_login: req.body.last_login || '',
-    checksum: req.body.checksum || ''
+    passwordbis: req.body.passwordbis || ''
   };
 
   usersModel.validateCreate(user)
     .then(function (result) {
-      return usersModel.insert(result.value);
+      return usersCtrl.validatePassword(result.value);
+    })
+    .then(function (result) {
+      return usersModel.insert(result);
     })
     .then(function (result) {
       http.render(res, result);
     })
     .catch(function (err) {
-      renderError(res, err);
+      renderError(res, user, err);
     });
 }
 
@@ -82,19 +85,13 @@ function put(req, res) {
 
   let user = {
     _id: req.body._id || '',
-    username: req.body.username || '',
-    email: req.body.email || '',
     password: req.body.password || '',
-    last_login: req.body.last_login || '',
-    checksum: req.body.checksum || ''
+    last_login: req.body.last_login || ''
   };
 
-  /*usersModel.validateId(user._id)
-    .then(function (id) {
-      user._id = id;
-      return*/
-  usersModel.validateUpdate(user)/*;
-    })*/
+  console.log(req.headers);
+
+  usersModel.validateUpdate(user)
     .then(function (ruser) {
       return usersModel.update(user._id, user);
     })
@@ -102,7 +99,7 @@ function put(req, res) {
       http.render(res, result);
     })
     .catch(function (err) {
-      renderError(res, err);
+      renderError(res, user, err);
     });
 }
 
