@@ -45,7 +45,7 @@ function normalizeNumber(num, def) {
 
 /**
  * Check if value is between
- * @return {Boolean}       return boolean
+ * @return {Boolean} return boolean
  */
 function betweenII(value, a, b) {
   return (value >= a && value <= b);
@@ -61,7 +61,7 @@ function betweenEI(value, a, b) {
 
 /**
  * Check if value is between
- * @return {Boolean}       return boolean
+ * @return {Boolean} return boolean
  */
 function betweenIE(value, a, b) {
   return (value >= a && value < b);
@@ -69,7 +69,7 @@ function betweenIE(value, a, b) {
 
 /**
  * Check if value is between
- * @return {Boolean}       return boolean
+ * @return {Boolean} return boolean
  */
 function betweenEE(value, a, b) {
   return (value > a && value < b);
