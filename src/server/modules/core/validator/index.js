@@ -79,11 +79,11 @@ function validateSchema(obj, schema) {
 
         for (let i = 0, l = err.details.length; i < l; i++) {
           let field = err.details[i].message.match(regField)[0];
-          let msg =  capfirst(validator.trim(messages.getLocaleErrorMessage(err.details[i])));
+          let msg = capfirst(validator.trim(messages.getLocaleErrorMessage(err.details[i])));
 
           lstErrors.push(createErrItem(field, msg));
         }
-        reject(invalidResult(value, lstErrors));//{ value: value, err: lstErrors });
+        reject(invalidResult(value, lstErrors));
       }
       else
         resolve(validResult(value));

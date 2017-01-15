@@ -8,6 +8,7 @@
  */
 const httpStatus = require('./status');
 const statusCode = httpStatus.HTTP_STATUS;
+const httpHandlers = require('./handlers');
 
 /**
  * check if code is a successfull
@@ -39,7 +40,7 @@ function isSuccess(code) {
 function render(res, data, responseCode) {
   let resultData = data || {};
   let code = responseCode || statusCode.HTTP_200_OK;
-
+  
   return res.status(code)
             .json({
               status: code,
@@ -49,10 +50,23 @@ function render(res, data, responseCode) {
 }
 
 /**
+ * render response error
+ * @param  {Object} res response object
+ * @param  {Object} value value error
+ * @param  {Object} err mongo error
+ * @return {Object}     response error object
+ */
+function renderHttpError(res, value, err) {
+  return render(res, httpHandlers.normalizeError(value, err), httpHandlers.httpErrorStatus(err));
+}
+
+
+/**
  * Module Export
  * @type {Object}
  */
 module.exports = {
   isSuccess: isSuccess,
-  render: render
+  render: render,
+  renderError: renderHttpError
 };

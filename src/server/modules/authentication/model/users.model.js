@@ -23,7 +23,7 @@ const usersModel = db.database.model('users', usersSchema.usersSchema);
  * @param  {Function} next  next operation save/update
  */
 function preUpdate(model, next) {
-  model.modified_at = date.getDateTimeNow();
+  model.modified_at = date.getDateUTC();
 
   // TODO: Create a valid checksum for object
   console.log('model a');

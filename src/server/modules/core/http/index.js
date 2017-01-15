@@ -21,5 +21,6 @@ module.exports = {
   isClientError: httpStatus.isClientError,
   isServerError: httpStatus.isServerError,
   render: response.render,
+  renderError: response.renderError,
   responseIsSuccess: response.isSuccess
 };

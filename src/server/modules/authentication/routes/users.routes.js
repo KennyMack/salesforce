@@ -11,7 +11,7 @@ const usersModel = require('../model/users.model');
 const usersCtrl = require('../controller/users.controller');
 const http = core.http;
 const utils = core.utils;
-const renderError = core.connection.handlers.renderHttpError;
+const renderError = core.http.renderError;//connection.handlers.renderHttpError;
 
 /**
  * Method Get in route /
@@ -89,11 +89,9 @@ function put(req, res) {
     last_login: req.body.last_login || ''
   };
 
-  console.log(req.headers);
-
   usersModel.validateUpdate(user)
     .then(function (ruser) {
-      return usersModel.update(user._id, user);
+      return usersModel.update(ruser._id, user);
     })
     .then(function (result) {
       http.render(res, result);

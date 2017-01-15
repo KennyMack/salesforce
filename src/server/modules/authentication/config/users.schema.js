@@ -41,12 +41,12 @@ const usersSchema = new db.mongoose.Schema({
   create_at: {
     type: Date,
     required: true,
-    default: date.getDateTimeNow()
+    default: date.getDateUTC()
   },
   modified_at: {
     type: Date,
     required: true,
-    default: date.getDateTimeNow()
+    default: date.getDateUTC()
   },
   active: {
     type: Boolean,

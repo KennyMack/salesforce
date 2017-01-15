@@ -7,13 +7,11 @@
  * Dependencies
  */
 const validator = require('../validator');
-const http = require('../http');
-const httpStatus = http.HTTP_STATUS;
-const response = http;
 
 /**
  * Erro e11000 message
- * @param {ObjectId} message mongo error
+ * @param  {Object} value   value evaluated
+ * @param  {Object} message mongo error
  * @return {Object}          converted mongo error
  */
 function E11000(value, message) {
@@ -24,51 +22,34 @@ function E11000(value, message) {
   column = column.substring(0, column.length -2);
 
   let msg = 'Valor: \"' + reValue.exec(message)[0].substring(1) + '\", deve ser único.';
-  let err = validator.createErrItem(column, msg);
 
-  return validator.invalidResult(value, err);
+  return validator.invalidResult(value, [ validator.createErrItem(column, msg) ]);
 }
 
 /**
- * Normalize mongo error
- * @param  {Object} err error object
- * @return {Object}     return normalized error
+ * Validation error in mongo
+ * @param  {Object} value   value evaluated
+ * @param  {Object} message mongo error
+ * @return {Object}         converted mongo Error
  */
-function normalizeError(value, err) {
-  console.log(err);
-  if ('code' in err && 'errmsg' in err) {
-    switch (err.code) {
-    case 11000:
-      return E11000(value, err.errmsg);
-    }
-  }
-  return err;
+function validationError(value, message) {
+  let lstErrors = [];
+  Object.keys(message.errors).map(function (key) {
+    lstErrors.push(validator.createErrItem(key, 'Valor informado não é válido'));
+  });
+
+  return validator.invalidResult(value, lstErrors);
 }
 
 /**
- * Convert mongo error to http status error
- * @param  {Object} err mongo error object
- * @return {Number}     http status error converted
+ * Cast error in mongo
+ * @param  {Object} value   value evaluated
+ * @param  {Object} message mongo error
+ * @return {Object}         converted mongo Error
  */
-function httpErrorStatus(err) {
-  if (('code' in err && 'errmsg' in err) ||
-      (err.name === 'ValidationError') ||
-      (err.err.length))
-    return httpStatus.HTTP_400_BAD_REQUEST;
-
-
-  return httpStatus.HTTP_200_OK;
-}
-
-/**
- * render mongo error
- * @param  {Object} res response object
- * @param  {Object} value value error
- * @param  {Object} err mongo error
- * @return {Object}     response error object
- */
-function renderHttpError(res, value, err) {
-  return response.render(res, normalizeError(value, err), httpErrorStatus(err));
+function castError(value, message) {
+  return validator.invalidResult(value,
+    [ validator.createErrItem(message.path, 'Valor informado nao é válido') ]);
 }
 
 /**
@@ -76,7 +57,7 @@ function renderHttpError(res, value, err) {
  * @type {Object}
  */
 module.exports = {
-  normalizeError: normalizeError,
-  httpErrorStatus: httpErrorStatus,
-  renderHttpError: renderHttpError
+  E11000: E11000,
+  validationError: validationError,
+  castError: castError
 };
